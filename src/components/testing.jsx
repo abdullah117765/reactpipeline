@@ -8,7 +8,7 @@ export const CheckList = () => {
 
     useEffect(() => {
         axios
-          .get("http://localhost:3001/check")
+          .get("http://13.235.78.132:3001/check")
           .then((response) => {
             console.log(response, " Group Details")
             setData(response.data);
