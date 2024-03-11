@@ -1,0 +1,97 @@
+pipeline {
+    
+    environment{
+        
+        //  dockerhubRepo = "yourusername/yourrepository" // Your DockerHub repository
+        credentialsId = 'dockerhubCredentials' // Jenkins credentials ID for DockerHub
+        EC2_INSTANCE_IP = '13.235.78.132'
+        EC2_INSTANCE_USERNAME = 'ubuntu'
+        PRIVATE_KEY_PATH = 'C:/Users/axiom/Downloads/jenkins_depEase.pem'
+        
+
+    }
+    agent any
+    
+    stages {
+        stage('Cloning Git') {
+            steps {
+                // Checkout code from the main branch
+                git branch: 'main', url: 'https://github.com/abdullah117765/reactpipeline.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Build your project here
+                // For example, if it's a Node.js project:
+                bat 'npm install'
+                // Or for a Java project:
+                // bat 'mvn clean install'
+                // Adjust the commands based on your project's build requirements
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                echo "tests passed"
+                
+            }
+        }
+      
+        
+      
+       
+        stage("docker image"){
+            
+            steps{
+                
+                script{
+                                    
+                    withDockerRegistry(credentialsId:'dockerhubCredentials'){
+                            bat 'docker build -t hamazzaii5/depeasefrontend .'
+                            echo 'image building done'
+                            bat "docker push hamazzaii5/depeasefrontend"
+                        
+                        
+                    
+                    
+                    }
+                    
+                }
+
+            }
+            
+            
+            
+        }
+        
+        stage('deployed') {
+              steps {
+                    // Echo the AWS CLI command to be executed
+                    echo 'aws ec2 describe-instances'
+                    
+                    // Use withCredentials block to set AWS credentials
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'awsCredentials']]) {
+                        // Set the AWS region to Mumbai (ap-south-1) using the environment variable
+                        bat 'set AWS_REGION=ap-south-1'
+                        
+                        
+                        // Execute the AWS CLI command with the specified region
+                        bat 'aws ec2 describe-instances --region ap-south-1'
+                        
+                        // Use SSH credentials to execute commands on the EC2 instance
+                        echo "before cred"
+                        //bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after login'\""
+                        
+                        // Construct the SSH command using Windows path and execute it using 'bat'
+                        
+                        bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/depeasefrontend:latest; sudo docker run -d -p 80:3000 hamazzaii5/depeasefrontend:latest\""
+
+
+                    }
+                }
+        }
+
+
+    }
+}
