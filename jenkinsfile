@@ -1,13 +1,15 @@
+
+
+
 pipeline {
     
     environment{
-        
-        //  dockerhubRepo = "yourusername/yourrepository" // Your DockerHub repository
         credentialsId = 'dockerhubCredentials' // Jenkins credentials ID for DockerHub
         EC2_INSTANCE_IP = '13.235.78.132'
         EC2_INSTANCE_USERNAME = 'ubuntu'
         PRIVATE_KEY_PATH = 'C:/Users/axiom/Downloads/jenkins_depEase.pem'
-        
+        availablePort=80
+        def jobName=null
 
     }
     agent any
@@ -16,59 +18,53 @@ pipeline {
         stage('Cloning Git') {
             steps {
                 // Checkout code from the main branch
-                git branch: 'main', url: 'https://github.com/abdullah117765/reactpipeline.git'
+                git branch: 'main', url: "https://github.com/abdullah117765/${env.JOB_NAME}"
             }
         }
         
         stage('Build') {
             steps {
-                // Build your project here
-                // For example, if it's a Node.js project:
-                bat 'npm install'
-                // Or for a Java project:
-                // bat 'mvn clean install'
-                // Adjust the commands based on your project's build requirements
+               
+               bat 'npm install '
+
+                
             }
         }
         
         stage('Test') {
             steps {
-                echo "tests passed"
-                
+                 echo "testing successful"   
             }
         }
       
         
       
        
-        stage("docker image"){
-            
-            steps{
-                
+        stage("docker image"){ 
+            steps{ 
                 script{
-                                    
+
+                    jobName = env.JOB_NAME.toLowerCase() 
+                    
                     withDockerRegistry(credentialsId:'dockerhubCredentials'){
-                            bat 'docker build -t hamazzaii5/depeasefrontend .'
+                            bat "docker build -t hamazzaii5/${jobName} ."
                             echo 'image building done'
-                            bat "docker push hamazzaii5/depeasefrontend"
-                        
-                        
-                    
-                    
+                            bat "docker push hamazzaii5/${jobName}"
+
                     }
                     
                 }
 
             }
-            
-            
-            
+ 
         }
         
         stage('deployed') {
               steps {
                     // Echo the AWS CLI command to be executed
                     echo 'aws ec2 describe-instances'
+                    
+                    
                     
                     // Use withCredentials block to set AWS credentials
                     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'awsCredentials']]) {
@@ -81,11 +77,10 @@ pipeline {
                         
                         // Use SSH credentials to execute commands on the EC2 instance
                         echo "before cred"
-                        //bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after login'\""
                         
                         // Construct the SSH command using Windows path and execute it using 'bat'
                         
-                        bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/depeasefrontend:latest; sudo docker run -d -p 80:3000 hamazzaii5/depeasefrontend:latest\""
+                        bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${jobName}:latest; sudo docker run -d -p ${availablePort}:3000 hamazzaii5/${jobName}:latest\""
 
 
                     }
