@@ -18,7 +18,7 @@ pipeline {
     stages {
         stage('Cloning Git') {
             when {
-                expression { params.PARAM_NAME }
+                expression { env.PARAM_NAME == 'true' }
             }
             
             steps {
