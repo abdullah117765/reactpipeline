@@ -44,25 +44,25 @@ pipeline {
             }
         }
         
-        // stage("docker image") {
-        //     steps {
-        //         script {
-        //              jobName = env.JOB_NAME.toLowerCase() 
+        stage("docker image") {
+            steps {
+                script {
+                     jobName = env.JOB_NAME.toLowerCase() 
 
-        //             if (!params.PARAM_NAME) {
-        //                 bat "docker rmi hamazzaii5/${jobName}"
-        //             } else {
-        //                 jobName = env.JOB_NAME.toLowerCase() 
+                    if (!params.PARAM_NAME) {
+                        bat "docker rmi hamazzaii5/${jobName}"
+                    } else {
+                        jobName = env.JOB_NAME.toLowerCase() 
                     
-        //                 withDockerRegistry(credentialsId:'dockerhubCredentials') {
-        //                     bat "docker build -t hamazzaii5/${jobName} ."
-        //                     echo 'image building done'
-        //                     bat "docker push hamazzaii5/${jobName}"
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+                        withDockerRegistry(credentialsId:'dockerhubCredentials') {
+                            bat "docker build -t hamazzaii5/${jobName} ."
+                            echo 'image building done'
+                            bat "docker push hamazzaii5/${jobName}"
+                        }
+                    }
+                }
+            }
+        }
         
        stage('deployed') {
     steps {
@@ -86,13 +86,14 @@ pipeline {
                 echo "before cred"
                 
                 if (!params.PARAM_NAME) {
-                   // bat 'ssh -i "C:/Users/axiom/Downloads/jenkins_depEase.pem" ubuntu@43.204.100.61 "bash -c \'sudo docker pull hamazzaii5/reactpipeline:latest\'"'
-
-                    bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login'; sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
+                    
+                    bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"bash -c "sudo docker stop hamazzaii5/${jobName}:latest"\""
+                    bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"bash -c "sudo docker rm hamzazzaii5/${jobName}:latest"\""
+                    bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"bash -c "sudo docker rmi hamzazzaii5/${jobName}:latest"\""
+                    
                 } else {
-                    // bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"bash -c 'sudo docker pull hamazzaii5/reactpipeline:latest'\""
-                    bat 'ssh -v -i "C:/Users/axiom/Downloads/jenkins_depEase.pem" ubuntu@13.235.67.33 "bash -c \'sudo docker pull hamazzaii5/reactpipeline:latest\'"'
-                    bat "ssh -v -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"bash -c 'sudo docker run -d -p 8000-9000:${exposePort} hamazzaii5/reactpipeline:latest'\""
+                    bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"bash -c "sudo docker pull hamazzaii5/${jobName}:latest"\""
+                    bat "ssh -v -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"bash -c "sudo docker run -d -p 8000-9000:${exposePort} hamazzaii5/${jobName}:latest"\""
                    
                  
                 }
