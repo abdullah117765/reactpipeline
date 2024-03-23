@@ -90,7 +90,7 @@ pipeline {
                     
                         }  else{
                             
-                            sh "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${env.JOB_NAME}:latest;  sudo docker run -d -p 8000-9000:${exposePort} hamazzaii5/${env.JOB_NAME}:latest\""
+                            sh " /usr/bin/nohup ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${env.JOB_NAME}:latest;  sudo docker run -d -p 8000-9000:${exposePort} hamazzaii5/${env.JOB_NAME}:latest\""
 
 
                       }
