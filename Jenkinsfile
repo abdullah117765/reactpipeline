@@ -13,9 +13,16 @@ pipeline {
 
     }
     agent any
+    parameters {
+        booleanParam(name: 'PARAM_NAME', defaultValue: true, description: 'for stoping container')
+    }
     
     stages {
         stage('Cloning Git') {
+            when {
+                expression { params.PARAM_NAME }
+            }
+            
             steps {
                 // Checkout code from the main branch
                 git branch: 'main', url: "https://github.com/abdullah117765/${env.JOB_NAME}"
@@ -23,6 +30,9 @@ pipeline {
         }
         
         stage('Build') {
+            when {
+                expression { params.PARAM_NAME }
+            }
             steps {
                
                bat 'npm install '
@@ -32,6 +42,9 @@ pipeline {
         }
         
         stage('Test') {
+            when {
+                expression { params.PARAM_NAME }
+            }
             steps {
                  echo "testing successful"   
             }
@@ -41,15 +54,21 @@ pipeline {
       
        
         stage("docker image"){ 
+            
             steps{ 
                 script{
-
-                    jobName = env.JOB_NAME.toLowerCase() 
+                    if(params.PARAM_NAME ==false){
+                        bat "docker rm hamazzaii5/${jobName}"
+                        bat "docker rmi hamazzaii5/${jobName}"
+                    }else{
+                        jobName = env.JOB_NAME.toLowerCase() 
                     
-                    withDockerRegistry(credentialsId:'dockerhubCredentials'){
+                        withDockerRegistry(credentialsId:'dockerhubCredentials'){
                             bat "docker build -t hamazzaii5/${jobName} ."
                             echo 'image building done'
                             bat "docker push hamazzaii5/${jobName}"
+
+                        }
 
                     }
                     
@@ -60,7 +79,9 @@ pipeline {
         }
         
         stage('deployed') {
+
               steps {
+                    
                     // Echo the AWS CLI command to be executed
                     echo 'aws ec2 describe-instances'
                     
@@ -79,9 +100,13 @@ pipeline {
                         echo "before cred"
                         
                         // Construct the SSH command using Windows path and execute it using 'bat'
-                        
-                        bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${jobName}:latest; sudo docker run -d -p ${availablePort}:3000 hamazzaii5/${jobName}:latest\""
+                        if(params.PARAM_NAME ==false){
+                            bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
+                        }else{
+                             bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${jobName}:latest; sudo docker run -d -p ${availablePort}:3000 hamazzaii5/${jobName}:latest\""
 
+                        }
+                       
 
                     }
                 }
