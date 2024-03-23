@@ -47,6 +47,8 @@ pipeline {
         stage("docker image") {
             steps {
                 script {
+                     jobName = env.JOB_NAME.toLowerCase() 
+
                     if (!params.PARAM_NAME) {
                         bat "docker rm hamazzaii5/${jobName}"
                         bat "docker rmi hamazzaii5/${jobName}"
