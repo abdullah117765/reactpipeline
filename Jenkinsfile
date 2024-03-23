@@ -90,8 +90,8 @@ pipeline {
 
                     bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login'; sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
                 } else {
-                    bat 'ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} "bash -c \'sudo docker pull hamazzaii5/reactpipeline:latest\'"'
-                    bat 'ssh -i {env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} "bash -c \'sudo docker run -d -p 8000-9000:${jobName} hamazzaii5/reactpipeline:latest\'"'
+                    bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} "bash -c \'sudo docker pull hamazzaii5/reactpipeline:latest\'""
+                    bat "ssh -i {env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} "bash -c \'sudo docker run -d -p 8000-9000:${jobName} hamazzaii5/reactpipeline:latest\'""
                  
                 }
             }
