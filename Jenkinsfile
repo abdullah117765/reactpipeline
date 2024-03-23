@@ -2,7 +2,7 @@ pipeline {
     
     environment {
         credentialsId = 'dockerhubCredentials' // Jenkins credentials ID for DockerHub
-        EC2_INSTANCE_IP = '43.204.100.61'  // dont touch this
+        EC2_INSTANCE_IP = '13.235.67.33'  // dont touch this
         EC2_INSTANCE_USERNAME = 'ubuntu'
         PRIVATE_KEY_PATH = 'C:/Users/axiom/Downloads/jenkins_depEase.pem' // dont change this
         exposePort = 3000   // change according to your docker file
