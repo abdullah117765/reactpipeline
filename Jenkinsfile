@@ -88,7 +88,7 @@ pipeline {
                 if (!params.PARAM_NAME) {
                     bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login'; sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
                 } else {
-                   ssh -v -i "C:/Users/axiom/Downloads/jenkins_depEase.pem" ubuntu@43.204.100.61 'echo "Hello, world!"'
+                   bat "ssh -v -i \"C:/Users/axiom/Downloads/jenkins_depEase.pem\" ubuntu@43.204.100.61 'echo \"Hello, world!\"'"
                 }
             }
         }
