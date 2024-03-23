@@ -44,25 +44,25 @@ pipeline {
             }
         }
         
-        stage("docker image") {
-            steps {
-                script {
-                     jobName = env.JOB_NAME.toLowerCase() 
+        // stage("docker image") {
+        //     steps {
+        //         script {
+        //              jobName = env.JOB_NAME.toLowerCase() 
 
-                    if (!params.PARAM_NAME) {
-                        bat "docker rmi hamazzaii5/${jobName}"
-                    } else {
-                        jobName = env.JOB_NAME.toLowerCase() 
+        //             if (!params.PARAM_NAME) {
+        //                 bat "docker rmi hamazzaii5/${jobName}"
+        //             } else {
+        //                 jobName = env.JOB_NAME.toLowerCase() 
                     
-                        withDockerRegistry(credentialsId:'dockerhubCredentials') {
-                            bat "docker build -t hamazzaii5/${jobName} ."
-                            echo 'image building done'
-                            bat "docker push hamazzaii5/${jobName}"
-                        }
-                    }
-                }
-            }
-        }
+        //                 withDockerRegistry(credentialsId:'dockerhubCredentials') {
+        //                     bat "docker build -t hamazzaii5/${jobName} ."
+        //                     echo 'image building done'
+        //                     bat "docker push hamazzaii5/${jobName}"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
         
        stage('deployed') {
     steps {
