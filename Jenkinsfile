@@ -90,7 +90,7 @@ pipeline {
                     
                         }  else{
                             
-                            bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${jobName}:latest; sudo docker run -d -p ${availablePort}:3000 hamazzaii5/${jobName}:latest\""
+                            bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${jobName}:latest;  sudo docker run -d -p 8000-9000:${exposePort} hamazzaii5/${jobName}:latest\""
 
 
                       }
