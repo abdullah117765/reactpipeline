@@ -50,7 +50,6 @@ pipeline {
                      jobName = env.JOB_NAME.toLowerCase() 
 
                     if (!params.PARAM_NAME) {
-                        bat "docker rm hamazzaii5/${jobName}"
                         bat "docker rmi hamazzaii5/${jobName}"
                     } else {
                         jobName = env.JOB_NAME.toLowerCase() 
