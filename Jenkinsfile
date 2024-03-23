@@ -13,9 +13,7 @@ pipeline {
 
     }
     agent any
-    parameters {
-        booleanParam(name: 'PARAM_NAME', defaultValue: true, description: 'for stoping container')
-    }
+    
     
     stages {
         stage('Cloning Git') {
@@ -31,7 +29,7 @@ pipeline {
         
         stage('Build') {
             when {
-                expression { params.PARAM_NAME }
+                expression { env.PARAM_NAME == 'true' }
             }
             steps {
                
@@ -43,7 +41,7 @@ pipeline {
         
         stage('Test') {
             when {
-                expression { params.PARAM_NAME }
+                expression { env.PARAM_NAME == 'true' }
             }
             steps {
                  echo "testing successful"   
@@ -57,7 +55,7 @@ pipeline {
             
             steps{ 
                 script{
-                    if(params.PARAM_NAME ==false){
+                    if(env.PARAM_NAME == 'False'){
                         bat "docker rm hamazzaii5/${jobName}"
                         bat "docker rmi hamazzaii5/${jobName}"
                     }else{
@@ -100,7 +98,7 @@ pipeline {
                         echo "before cred"
                         
                         // Construct the SSH command using Windows path and execute it using 'bat'
-                        if(params.PARAM_NAME ==false){
+                        if(env.PARAM_NAME == 'False'){
                             bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
                         }else{
                              bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker pull hamazzaii5/${jobName}:latest; sudo docker run -d -p ${availablePort}:3000 hamazzaii5/${jobName}:latest\""
