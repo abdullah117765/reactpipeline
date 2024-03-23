@@ -64,41 +64,36 @@ pipeline {
         //     }
         // }
         
-        stage('deployed') {
-            steps {
-                script {
-
-                    
-                    // Echo the AWS CLI command to be executed
-                    echo 'aws ec2 describe-instances'
+       stage('deployed') {
+    steps {
+        script {
+            // Initialize jobName
+            def jobName = env.JOB_NAME.toLowerCase()
+            
+            // Echo the AWS CLI command to be executed
+            echo 'aws ec2 describe-instances'
+            
+            // Use withCredentials block to set AWS credentials
+            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'awsCredentials']]) {
                 
-                    // Use withCredentials block to set AWS credentials
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'awsCredentials']]) {
-                        
-                    // Set the AWS region to Mumbai (ap-south-1) using the environment variable
-                        bat 'set AWS_REGION=ap-south-1'
-                    
-                    // Execute the AWS CLI command with the specified region
-                        bat 'aws ec2 describe-instances --region ap-south-1'
-                    
-                    // Use SSH credentials to execute commands on the EC2 instance
-                        echo "before cred"
-
-                        if(!params.PARAM_NAME){
-                            
-                            bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
-                    
-                        }  else{
-                            
-                          bat "ssh -i "${env.PRIVATE_KEY_PATH}" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} "echo 'after the login'" "
-
-                      }
-                    
-                    
-                   }
-
+                // Set the AWS region to Mumbai (ap-south-1) using the environment variable
+                bat 'set AWS_REGION=ap-south-1'
+                
+                // Execute the AWS CLI command with the specified region
+                bat 'aws ec2 describe-instances --region ap-south-1'
+                
+                // Use SSH credentials to execute commands on the EC2 instance
+                echo "before cred"
+                
+                if (!params.PARAM_NAME) {
+                    bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login'; sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
+                } else {
+                    bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'echo \"after the login\"'"
                 }
             }
         }
+    }
+}
+
     }
 }
