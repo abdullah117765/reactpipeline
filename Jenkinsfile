@@ -47,7 +47,7 @@ pipeline {
         stage("docker image") {
             steps {
                 script {
-                    if (params.PARAM_NAME == 'false') {
+                    if (!params.PARAM_NAME) {
                         bat "docker rm hamazzaii5/${jobName}"
                         bat "docker rmi hamazzaii5/${jobName}"
                     } else {
@@ -83,7 +83,7 @@ pipeline {
                     // Use SSH credentials to execute commands on the EC2 instance
                         echo "before cred"
 
-                        if(params.PARAM_NAME == 'false'){
+                        if(!params.PARAM_NAME){
                             
                             bat "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'after the login';  sudo docker stop hamazzaii5/${jobName}; sudo docker rm hamazzaii5/${jobName}:latest; sudo docker rmi hamzazzaii5/${jobName}:latest\""
                     
