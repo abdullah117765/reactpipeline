@@ -90,8 +90,7 @@ pipeline {
                     
                         }  else{
                             
-                            ssh -i "${env.PRIVATE_KEY_PATH}" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'echo "after the login"'
-
+                           sh "ssh -i \"${env.PRIVATE_KEY_PATH}\" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'echo \"after the login\"'"
 
 
                       }
