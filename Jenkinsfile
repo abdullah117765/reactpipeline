@@ -90,7 +90,7 @@ pipeline {
                     
                         }  else{
                             
-                           bat "ssh -i "${env.PRIVATE_KEY_PATH}" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'echo "after the login"' "
+                           bat "ssh -i "${env.PRIVATE_KEY_PATH}" ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} echo "after the login" "
 
 
                       }
