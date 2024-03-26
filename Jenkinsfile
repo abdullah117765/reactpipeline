@@ -93,8 +93,8 @@ pipeline {
                             bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'bash -c \"sudo docker rmi hamazzaii5/${jobName}:latest\"'"
                         } else {
                             
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker pull hamazzaii5/${jobName}:latest\""
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker run -d -p 8000-9000:${exposePort} hamazzaii5/${jobName}:latest\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker pull hamazzaii5/${jobName}\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker run -d -p 8000-9000:${exposePort} hamazzaii5/${jobName}\""
 
                         }
                     }
