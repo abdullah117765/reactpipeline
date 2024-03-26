@@ -89,15 +89,15 @@ pipeline {
                         
                         if (!params.PARAM_NAME) {
 
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker stop hamazzaii5/${jobName}\""
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker rm hamazzaii5/${jobName}\""
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker rmi hamazzaii5/${jobName}\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker stop ${jobName}\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker rm ${jobName}\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker rmi ${jobName}\""
 
                         } else {
                             bat "ssh -v -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'hello world'\""
                     
                             bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker pull hamazzaii5/${jobName}\""
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker run -d -p 8000-9000:${exposePort} --name hamazzaii5/${jobName} hamazzaii5/${jobName}\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker run -d -p 8000-9000:${exposePort} --name ${jobName} hamazzaii5/${jobName}\""
 
                         }
                     }
