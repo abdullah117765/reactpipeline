@@ -88,9 +88,11 @@ pipeline {
                         echo "before cred"
                         
                         if (!params.PARAM_NAME) {
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'bash -c \"sudo docker stop hamazzaii5/${jobName}:latest\"'"
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'bash -c \"sudo docker rm hamazzaii5/${jobName}:latest\"'"
-                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} 'bash -c \"sudo docker rmi hamazzaii5/${jobName}:latest\"'"
+
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker stop hamazzaii5/${jobName}\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker rm hamazzaii5/${jobName}\""
+                            bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker rmi hamazzaii5/${jobName}\""
+
                         } else {
                             bat "ssh -v -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"echo 'hello world'\""
                     
