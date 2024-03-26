@@ -99,7 +99,7 @@ pipeline {
                     
                             bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker pull hamazzaii5/${jobName}\""
                             bat "ssh -i ${env.PRIVATE_KEY_PATH} ${env.EC2_INSTANCE_USERNAME}@${env.EC2_INSTANCE_IP} \"sudo docker run -d -p 8000-9000:${exposePort} --name ${jobName} hamazzaii5/${jobName}\""
-                            def portMapping = sh(script: "docker port <container_name_or_id>", returnStdout: true).trim()
+                            def portMapping = sh(script: "docker port ${jobName}", returnStdout: true).trim()
                             def portNumber = (portMapping =~ /.*:(\d+).*/)[0][1]
                             echo "Port Number: ${portNumber}"
                             deployedLink="${EC2_INSTANCE_IP}:${portNumber}"
