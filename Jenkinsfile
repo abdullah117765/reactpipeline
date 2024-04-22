@@ -2,7 +2,7 @@ pipeline {
     
     environment {
         credentialsId = 'dockerhubCredentials' // Jenkins credentials ID for DockerHub
-        EC2_INSTANCE_IP = ' 13.233.71.65'  // don't touch this this should be elastic aws ip but for now it is not
+        EC2_INSTANCE_IP = '13.126.124.60'  // don't touch this this should be elastic aws ip but for now it is not
         EC2_INSTANCE_USERNAME = 'ubuntu'
         PRIVATE_KEY_PATH = 'C:/Users/axiom/Downloads/jenkins_depEase.pem' // don't change this
         exposePort = 3000   
