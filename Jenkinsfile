@@ -104,7 +104,7 @@ pipeline {
                             def portNumber = (portMapping =~ /.*:(\d+).*/)[0][1]
                             echo "Port Number: ${portNumber}"
                             deployedLink="${EC2_INSTANCE_IP}:${portNumber}"
-                            echo "Link: ${deployedLink}"
+                            echo "deployedLink: ${deployedLink}"
 
                         }
                     }
